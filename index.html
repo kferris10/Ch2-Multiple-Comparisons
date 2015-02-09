@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multiple Comparisons</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Multiple Comparisons">
+  <meta name="author" content="Stat 217">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Multiple Comparisons</h1>
+    <h2>Chapter 2 One-Way ANOVA</h2>
+    <p>Stat 217<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>The ACT Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Since we didn&#39;t find evidence of a difference in the MockJury data, we won&#39;t use it here.  Instead, I&#39;ll be analyzing the ACT data.  It has one factor (Group) with three levels (Baseball, Football, Non-athletes).  Here&#39;s a summary of the data:</p>
+
+<pre><code class="r">summary(act)
+</code></pre>
+
+<pre><code>     Score                Group  
+ Min.   :17.00   Baseball    :8  
+ 1st Qu.:22.00   Football    :7  
+ Median :24.00   Non.athletes:8  
+ Mean   :23.87                   
+ 3rd Qu.:26.00                   
+ Max.   :30.00                   
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Some Baseball Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In baseball, players play different positions.  We&#39;ll break these positions down into four categories: catchers (C), infielders (IN), outfielders (OF), and pitchers (P).  There are 1021 observations in this data set (N = 1021).  We&#39;ll check to see if any of the positions have different batting averages than the others.  Here are box plots of the batting averages for the four positions:</p>
+
+<p><img src="assets/fig/base_box-1.png" title="plot of chunk base_box" alt="plot of chunk base_box" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>1. Some Information about the Baseball Data</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz-text quiz-multitext well">
+  <p>Enter a number to answer these questions.</p>
+
+<ol>
+<li>How many categorical variables are there in the baseball data?</li>
+<li>How many levels are in the position variable?</li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>How many categorical variables are there?  How many different categories are there in the <em>position</em> variable?</p>
+
+</div>
+<div class="quiz-explanation">
+  <ol>
+<li><p><span class="answer">1</span>
+The only categorical variable is position.</p></li>
+<li><p><span class="answer">4</span>
+There are four levels: catcher, infielder, outfielder, pitcher.</p></li>
+</ol>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Hypotheses for Baseball Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We&#39;ll start by performing an F test to see if one group is different.  The hypotheses are:</p>
+
+<p>\(H_0: \mu_1 = \mu_2 = \mu_3 = \mu_4\)</p>
+
+<p>\(H_A:\) at least one \(\mu_j\) is different from the others.</p>
+
+<p>Here is a partially filled in ANOVA table.</p>
+
+<table><thead>
+<tr>
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">Sum Sq</th>
+<th align="right">Mean Sq</th>
+<th align="right">F value</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="left">Position</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right">1.30</td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left">Residuals</td>
+<td align="right"></td>
+<td align="right">11.10</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left">Total</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>2. Filling in the ANOVA Table Part 1</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz-text quiz-multitext well">
+  <p>Fill in the following.  Round all answers to 2 decimal places.</p>
+
+<ol>
+<li>$df_A = $</li>
+<li>$df_E = $</li>
+<li>$df_{Total} = $</li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>The degrees of freedom relate to the sample size and the number of groups.</p>
+
+</div>
+<div class="quiz-explanation">
+  <ol>
+<li><p><span class="answer">3</span>
+$ df_A = J-1 = 4-1$</p></li>
+<li><p><span class="answer">1017</span>
+$ df_E = N-J = 1021 - 4$</p></li>
+<li><p><span class="answer">1020</span>
+$ df_{Total} = df_A + df_E = N-1 = 1021-1$</p></li>
+</ol>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>3. Filling in the ANOVA Table Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz-text quiz-multitext well">
+  <p>Fill in the following.  Round all answers to 2 decimal places.</p>
+
+<ol>
+<li>$SS_A = $</li>
+<li>$SS_{Total} = $</li>
+<li>$MS_E = $</li>
+<li>F-statistic = </li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>Remember that \(SS / df = MS\) and that the F-statistic is the ratio of the Mean Squares</p>
+
+</div>
+<div class="quiz-explanation">
+  <ol>
+<li><p><span class="answer">3.90</span>
+\(SS_A = MS_A * df_A = 1.30 * 3\)</p></li>
+<li><p><span class="answer">15</span>
+\(SS_{Total} = SS_E + SS_A\)</p></li>
+<li><p><span class="answer">0.01</span>
+$ MS_E = SS_E / df_E = 11.10 / 1017$</p></li>
+<li><p><span class="answer">130</span>
+$ F = MS_A / MS_E = 1.30 / .01$</p></li>
+</ol>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Decision for ACT Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>We previously found that an  F-test for the ACT data led us to reject the null that all three groups had the same true mean ACT scores.  To write a conclusion in the context of the problem, we&#39;d say &quot;At the \(\alpha = 0.05\) significance level, the evidence suggests that at least one scholarship group has a different true mean ACT score than the others.&quot;  Since we rejected the null, we&#39;ll use Tukey&#39;s HSD method to find out which group(s) are different from the others.  </p>
+
+<pre><code class="r">m1 &lt;- lm(Score ~ Group, data = act)
+anova(m1)
+</code></pre>
+
+<pre><code>Analysis of Variance Table
+
+Response: Score
+          Df  Sum Sq Mean Sq F value  Pr(&gt;F)
+Group      2  71.002  35.501  4.5629 0.02331
+Residuals 20 155.607   7.780                
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Decision for the baseball data</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz quiz-single well ">
+  <p>Our F-statistic follows an F distribution with 3 and 1017 degrees of freedom.  This yields a p-value of approximately 0.  What is our decision about the null hypothesis?  Based on this decision, is it appropriate to perform multiple comparisons?</p>
+
+<ol>
+<li>Reject the null; multiple comparisons are not appropriate since we rejected the null</li>
+<li>FTR; multiple comparisons are not appropriate since we failed to reject the null</li>
+<li>FTR; multiple comparisons are appropriate since we failed to reject the null</li>
+<li><em>Reject the null; multiple comparisons are appropriate since we rejected the null</em></li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>Based on our decision, does it make sense to see which groups are different?</p>
+
+</div>
+<div class="quiz-explanation">
+  <p>Our p-value is much less than \(\alpha\) so we reject the null hypothesis.  Therefore, it does make sense to check and see which groups are different so we will perform a multiple comparisons procedure.</p>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Multiple Comparisons of ACT Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Family-wise 95% intervals are plotted below.  The only comparison for which the interval does not contain zero is the Non.athletes - Football comparison.  This suggests that the true mean ACT scores of the Non-athletes are different from the true mean ACT scores of the football players, but that the other combinations of groups are not significantly different.</p>
+
+<p><img src="assets/fig/act_mult-1.png" title="plot of chunk act_mult" alt="plot of chunk act_mult" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Confidence Intervals for Baseball Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Family-wise 95% intervals, along with the code to make them, are plotted below.</p>
+
+<pre><code class="r">m2 &lt;- lm(BA ~ Position, data = baseball)
+require(multcomp)
+mult2 &lt;- glht(m2, linfct = mcp(Position = &quot;Tukey&quot;))
+old.par &lt;- par(mai=c(1.5,2,1,1))
+plot(mult2)
+</code></pre>
+
+<p><img src="assets/fig/base_mult-1.png" title="plot of chunk base_mult" alt="plot of chunk base_mult" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Multiple Comparisons for Baseball Data</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz quiz-multiple well" data-individual>
+  <p>Based on the previous plot, which groups of players are significantly different?  Check all that apply.  Make sure to hit <code>Show Answer</code> on this one (the program will not warn you if you forget a group).</p>
+
+<ol>
+<li>Infielders and Catchers (IN - C)</li>
+<li>Outfields and Catchers (OF - C)</li>
+<li><em>Pitchers and Catchers (P - C)</em></li>
+<li>Outfielders and Infielders (OF - IN)</li>
+<li><em>Pitchers and Infielders (P - IN)</em></li>
+<li><em>Pitchers and Outfielders (P - OF)</em></li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>If the confidence interval comparing two groups contains zero, then we do not conclude that the groups are significantly different.</p>
+
+</div>
+<div class="quiz-explanation">
+  <p>All the intervals comparing pitchers to another position do not contain zero so pitchers are significantly different from each other group.  None of the other intervals contain zero so they are not significantly different.</p>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Conclusion Part 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>1) Instead of making a plot to determine which groups were different, we could have used a table like the one below:</p>
+
+<pre><code class="r">confint(mult2)
+</code></pre>
+
+<pre><code>            Estimate          lwr         upr
+IN - C   0.024336111 -0.008161628  0.05683385
+OF - C   0.031492754 -0.003463242  0.06644875
+P - C   -0.107210210 -0.140253909 -0.07416651
+OF - IN  0.007156643 -0.015680002  0.02999329
+P - IN  -0.131546321 -0.151332093 -0.11176055
+P - OF  -0.138702964 -0.162310067 -0.11509586
+</code></pre>
+
+<p>Explain how this table could have been used to make the same comparisons.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Conclusion Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>2) Write a concluding statement in the context of the problem for the results of the F test on the baseball data.</p>
+
+<p>3) What does a family-wise 95% confidence level mean?</p>
+
+<p>4) Take a look at <a href="http://xkcd.com/882/">this comic</a>.  Explain why it was a mistake for them to conclude that green jelly beans are related to acne.</p>
+
+<p>5) Are there any changes or improvements that you would make to this activity?</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='The ACT Data'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Some Baseball Data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='1. Some Information about the Baseball Data'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Hypotheses for Baseball Data'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='2. Filling in the ANOVA Table Part 1'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='3. Filling in the ANOVA Table Part 2'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Decision for ACT Data'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Decision for the baseball data'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Multiple Comparisons of ACT Data'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Confidence Intervals for Baseball Data'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Multiple Comparisons for Baseball Data'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Conclusion Part 1'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Conclusion Part 2'>
+         13
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+<script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+
+  <script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
